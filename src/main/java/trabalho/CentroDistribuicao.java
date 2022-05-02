@@ -12,6 +12,7 @@ public class CentroDistribuicao {
     private int tGasolina;
     private int tAlcool1;
     private int tAlcool2;
+    private SITUACAO situacao;
 
     public CentroDistribuicao (int tAditivo, int tGasolina, int tAlcool1, int tAlcool2) {
         this.tAditivo = tAditivo;
@@ -52,23 +53,23 @@ public class CentroDistribuicao {
         this.tAlcool2 = tAlcool2;
     }
 
-    public void defineSituacao(){ 
-        //Fazer
+    public void defineSituacao(){
+        if (tAditivo > MAX_ADITIVO * 0.5 && tGasolina > MAX_GASOLINA * 0.5 && tAlcool1 > MAX_ALCOOL * 0.5 && tAlcool2 > MAX_ALCOOL * 0.5) {
+            this.situacao =  SITUACAO.NORMAL;
+        }
+        else if (tAditivo > MAX_ADITIVO * 0.25 && tAditivo <= MAX_ADITIVO * 0.5 || tGasolina > MAX_GASOLINA * 0.25 && tGasolina <= MAX_GASOLINA * 0.5 || tAlcool1 > MAX_ALCOOL * 0.25 && tAlcool1 <= MAX_ALCOOL * 0.5 || tAlcool2 > MAX_ALCOOL * 0.25 && tAlcool2 <= MAX_ALCOOL * 0.5) {
+            this.situacao =  SITUACAO.SOBRAVISO;
+        }
+        else if (tAditivo < MAX_ADITIVO * 0.25 || tGasolina < MAX_GASOLINA * 0.25 || tAlcool1 < MAX_ALCOOL * 0.25 || tAlcool2 < MAX_ALCOOL * 0.25) {
+            this.situacao =  SITUACAO.EMERGENCIA;
+        }
+        else {
+            this.situacao =  SITUACAO.NORMAL;
+        }
      }
     
     public SITUACAO getSituacao(){
-        if (tAditivo > MAX_ADITIVO * 0.5 && tGasolina > MAX_GASOLINA * 0.5 && tAlcool1 > MAX_ALCOOL * 0.5 && tAlcool2 > MAX_ALCOOL * 0.5) {
-            return SITUACAO.NORMAL;
-        }
-        else if (tAditivo > MAX_ADITIVO * 0.25 && tAditivo <= MAX_ADITIVO * 0.5 || tGasolina > MAX_GASOLINA * 0.25 && tGasolina <= MAX_GASOLINA * 0.5 || tAlcool1 > MAX_ALCOOL * 0.25 && tAlcool1 <= MAX_ALCOOL * 0.5 || tAlcool2 > MAX_ALCOOL * 0.25 && tAlcool2 <= MAX_ALCOOL * 0.5) {
-            return SITUACAO.SOBRAVISO;
-        }
-        else if (tAditivo < MAX_ADITIVO * 0.25 || tGasolina < MAX_GASOLINA * 0.25 || tAlcool1 < MAX_ALCOOL * 0.25 || tAlcool2 < MAX_ALCOOL * 0.25) {
-            return SITUACAO.EMERGENCIA;
-        }
-        else {
-            return SITUACAO.NORMAL;
-        }
+        return this.situacao;
     }
 
     public int recebeAditivo(int qtdade) {
@@ -116,7 +117,8 @@ public class CentroDistribuicao {
     }        
      
     public int[] encomendaCombustivel(int qtdade, TIPOPOSTO tipoPosto) { 
-        //Fazer
+        this.defineSituacao();
+        SITUACAO situacao = this.getSituacao();
         return null;
     }
 }
