@@ -20,6 +20,13 @@ public class CentroDistribuicao {
         this.tAlcool1 = tAlcool1;
         this.tAlcool2 = tAlcool2;
      }
+
+     public static void main(String[] args) {
+        CentroDistribuicao centro = new CentroDistribuicao(500, 100, 2500, 2500);
+         int[] encomenda = centro.encomendaCombustivel(200, TIPOPOSTO.COMUM);
+         System.out.println(encomenda[0] + " " + encomenda[1] + " " + encomenda[2] + " " + encomenda[3]);
+
+     }
     
     public int gettAditivo() {
         return tAditivo;
@@ -114,11 +121,63 @@ public class CentroDistribuicao {
         }
         else
             return -1;
-    }        
+    }
+
      
     public int[] encomendaCombustivel(int qtdade, TIPOPOSTO tipoPosto) { 
         this.defineSituacao();
         SITUACAO situacao = this.getSituacao();
-        return null;
+        int[] retorno = new int[4];
+
+        int qtdadeAditivoNoCentro = this.gettAditivo();
+        int qtdadeGasolinaNoCentro = this.gettGasolina();
+        int qtdadeAlcool1NoCentro = this.gettAlcool1();
+        int qtdadeAlcool2NoCentro = this.gettAlcool2();
+
+        if (situacao == SITUACAO.SOBRAVISO) {
+            if (tipoPosto == TIPOPOSTO.COMUM) {
+                qtdade = qtdade / 2;
+            }
+        }
+
+        if (situacao == SITUACAO.EMERGENCIA) {
+            if (tipoPosto == TIPOPOSTO.COMUM) {
+                retorno[0] = -14;
+            } else {
+                qtdade = qtdade / 2;
+            }
+        }
+
+        int qtdAditivo = (int) Math.ceil(qtdade * 0.05);
+        int qtdGasolina = (int) Math.ceil(qtdade * 0.70);
+        int qtdAlcool1 = (int) Math.ceil(qtdade * 0.125);
+        int qtdAlcool2 = (int) Math.ceil(qtdade * 0.125);
+
+        int qtdAditivoRestante = qtdadeAditivoNoCentro - qtdAditivo;
+        int qtdGasolinaRestante = qtdadeGasolinaNoCentro - qtdGasolina;
+        int qtdAlcool1Restante = qtdadeAlcool1NoCentro - qtdAlcool1;
+        int qtdAlcool2Restante = qtdadeAlcool2NoCentro - qtdAlcool2;
+
+        if (retorno[0] == -14) {
+            return retorno;
+        }
+
+        if (qtdAditivoRestante < 0 || qtdGasolinaRestante < 0 || qtdAlcool1Restante < 0 || qtdAlcool2Restante < 0) {
+            retorno[0] = -21;
+            return retorno;
+        }
+
+        retorno[0] = qtdAditivoRestante;
+        retorno[1] = qtdGasolinaRestante;
+        retorno[2] = qtdAlcool1Restante;
+        retorno[3] = qtdAlcool2Restante;
+
+        settAditivo(qtdAditivoRestante);
+        settGasolina(qtdGasolinaRestante);
+        settAlcool1(qtdAlcool1Restante);
+        settAlcool2(qtdAlcool2Restante);
+
+        return retorno;
     }
+
 }
