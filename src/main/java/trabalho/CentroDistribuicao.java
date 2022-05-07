@@ -19,10 +19,14 @@ public class CentroDistribuicao {
         this.tGasolina = tGasolina;
         this.tAlcool1 = tAlcool1;
         this.tAlcool2 = tAlcool2;
+
+        if (tAditivo < 0 || tGasolina < 0 || tAlcool1 < 0 || tAlcool2 < 0) {
+            throw new IllegalArgumentException("Parametros inválidos");
+        }
      }
 
      public static void main(String[] args) {
-        CentroDistribuicao centro = new CentroDistribuicao(500, 100, 2500, 2500);
+        CentroDistribuicao centro = new CentroDistribuicao(500, 10000, 1250, 1250);
          int[] encomenda = centro.encomendaCombustivel(200, TIPOPOSTO.COMUM);
          System.out.println(encomenda[0] + " " + encomenda[1] + " " + encomenda[2] + " " + encomenda[3]);
 
@@ -61,10 +65,10 @@ public class CentroDistribuicao {
     }
 
     public void defineSituacao(){
-        if (tAditivo > MAX_ADITIVO * 0.5 && tGasolina > MAX_GASOLINA * 0.5 && tAlcool1 > MAX_ALCOOL * 0.5 && tAlcool2 > MAX_ALCOOL * 0.5) {
+        if (tAditivo >= MAX_ADITIVO * 0.5 && tGasolina >= MAX_GASOLINA * 0.5 && tAlcool1 >= MAX_ALCOOL * 0.5 && tAlcool2 >= MAX_ALCOOL * 0.5) {
             this.situacao =  SITUACAO.NORMAL;
         }
-        else if (tAditivo > MAX_ADITIVO * 0.25 && tAditivo <= MAX_ADITIVO * 0.5 || tGasolina > MAX_GASOLINA * 0.25 && tGasolina <= MAX_GASOLINA * 0.5 || tAlcool1 > MAX_ALCOOL * 0.25 && tAlcool1 <= MAX_ALCOOL * 0.5 || tAlcool2 > MAX_ALCOOL * 0.25 && tAlcool2 <= MAX_ALCOOL * 0.5) {
+        else if (tAditivo >= MAX_ADITIVO * 0.25 && tAditivo < MAX_ADITIVO * 0.5 || tGasolina >= MAX_GASOLINA * 0.25 && tGasolina < MAX_GASOLINA * 0.5 || tAlcool1 >= MAX_ALCOOL * 0.25 && tAlcool1 < MAX_ALCOOL * 0.5 || tAlcool2 >= MAX_ALCOOL * 0.25 && tAlcool2 < MAX_ALCOOL * 0.5) {
             this.situacao =  SITUACAO.SOBRAVISO;
         }
         else if (tAditivo < MAX_ADITIVO * 0.25 || tGasolina < MAX_GASOLINA * 0.25 || tAlcool1 < MAX_ALCOOL * 0.25 || tAlcool2 < MAX_ALCOOL * 0.25) {
@@ -123,7 +127,6 @@ public class CentroDistribuicao {
             return -1;
     }
 
-     
     public int[] encomendaCombustivel(int qtdade, TIPOPOSTO tipoPosto) { 
         this.defineSituacao();
         SITUACAO situacao = this.getSituacao();
